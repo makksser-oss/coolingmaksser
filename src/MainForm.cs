@@ -27,7 +27,7 @@ public sealed class MainForm : Form {
     }
     Panel Card()=>new(){BackColor=card,Padding=new Padding(14),Margin=new Padding(8)};
     Label L(string t,int size=10,bool bold=false,Color? c=null)=>new(){Text=t,AutoSize=true,ForeColor=c??(bold?fg:muted),Font=new("Segoe UI",size,bold?FontStyle.Bold:FontStyle.Regular),Margin=new Padding(4,5,4,5)};
-    Button B(string t,EventHandler click,bool hot=false){var b=new Button{Text=t,Height=42,Dock=DockStyle.Top,FlatStyle=Flat,BackColor=hot?Color.FromArgb(72,67,224):card2,ForeColor=fg,Font=new("Segoe UI",10,FontStyle.Bold),Cursor=Cursors.Hand,Margin=new Padding(0,4,0,4)};b.FlatAppearance.BorderSize=0;b.Click+=click;return b;}
+    Button B(string t,EventHandler click,bool hot=false){var b=new Button{Text=t,Height=42,Dock=DockStyle.Top,FlatStyle=FlatStyle.Flat,BackColor=hot?Color.FromArgb(72,67,224):card2,ForeColor=fg,Font=new("Segoe UI",10,FontStyle.Bold),Cursor=Cursors.Hand,Margin=new Padding(0,4,0,4)};b.FlatAppearance.BorderSize=0;b.Click+=click;return b;}
     void Build(){
         var root=new TableLayoutPanel{Dock=DockStyle.Fill,ColumnCount=4,RowCount=1,BackColor=bg,Padding=new Padding(0)};
         root.ColumnStyles.Add(new(SizeType.Absolute,235)); root.ColumnStyles.Add(new(SizeType.Percent,100)); root.ColumnStyles.Add(new(SizeType.Absolute,300)); root.ColumnStyles.Add(new(SizeType.Absolute,300)); Controls.Add(root);
@@ -52,7 +52,7 @@ public sealed class MainForm : Form {
         head.Controls.Add(new Label{Text="LOVINGCOOL 6 PRO  •  480 × 480  •  живой предпросмотр",AutoSize=true,Location=new(6,42),ForeColor=muted});
         var presets=new FlowLayoutPanel{Dock=DockStyle.Bottom,Height=145,BackColor=card,Padding=new Padding(12),WrapContents=false,AutoScroll=true};p.Controls.Add(presets);
         foreach(var name in new[]{"NEON","CYBER","MINIMAL","SYSTEM","GAMING","CLOCK"}){
-            var b=new Button{Text=name,Width=120,Height=105,FlatStyle=Flat,BackColor=card2,ForeColor=fg,Font=new("Segoe UI",10,FontStyle.Bold),Margin=new Padding(6)};b.FlatAppearance.BorderColor=Color.FromArgb(55,75,115);b.Click+=(_,_)=>ApplyPreset(name);presets.Controls.Add(b);
+            var b=new Button{Text=name,Width=120,Height=105,FlatStyle=FlatStyle.Flat,BackColor=card2,ForeColor=fg,Font=new("Segoe UI",10,FontStyle.Bold),Margin=new Padding(6)};b.FlatAppearance.BorderColor=Color.FromArgb(55,75,115);b.Click+=(_,_)=>ApplyPreset(name);presets.Controls.Add(b);
         }
         var stage=Card();stage.Dock=DockStyle.Fill;p.Controls.Add(stage);stage.BringToFront();
         var frame=new Panel{Width=550,Height=550,Anchor=AnchorStyles.None,BackColor=Color.FromArgb(10,15,28),Padding=new Padding(25)};
@@ -64,7 +64,7 @@ public sealed class MainForm : Form {
         var title=L("Добавить элемент",15,true);title.Dock=DockStyle.Top;p.Controls.Add(title);
         var tabs=new FlowLayoutPanel{Dock=DockStyle.Top,Height=205,WrapContents=true,Padding=new Padding(0,8,0,0)};p.Controls.Add(tabs);
         foreach(var x in new[]{("T","Текст","text"),("◷","Часы","clock"),("▧","Изображение","image"),("▶","Видео / GIF","media"),("♨","Температура","temp"),("▥","Загрузка","load"),("⌁","Частота","clockSensor"),("◉","Мощность","power"),("◌","Вентилятор","fan"),("▤","Память","memory"),("⌁","Сеть","network"),("FPS","FPS","fps")}){
-            var b=new Button{Text=x.Item1+"\n"+x.Item2,Width=82,Height=58,FlatStyle=Flat,BackColor=card2,ForeColor=fg,Margin=new Padding(3)};b.FlatAppearance.BorderSize=0;var kind=x.Item3;b.Click+=(_,_)=>AddKind(kind);tabs.Controls.Add(b);
+            var b=new Button{Text=x.Item1+"\n"+x.Item2,Width=82,Height=58,FlatStyle=FlatStyle.Flat,BackColor=card2,ForeColor=fg,Margin=new Padding(3)};b.FlatAppearance.BorderSize=0;var kind=x.Item3;b.Click+=(_,_)=>AddKind(kind);tabs.Controls.Add(b);
         }
         var sh=L("ДАТЧИКИ ПК",9,true);sh.Dock=DockStyle.Top;p.Controls.Add(sh);sensorPicker.BackColor=card2;sensorPicker.ForeColor=fg;p.Controls.Add(sensorPicker);
         var add=B("+ Добавить выбранный датчик",(_,_)=>AddSelectedSensor(),true);p.Controls.Add(add);
