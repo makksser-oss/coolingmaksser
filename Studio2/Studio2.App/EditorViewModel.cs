@@ -12,7 +12,7 @@ public sealed class EditorViewModel:INotifyPropertyChanged,IDisposable{
  public void Delete(){if(Selected==null)return;Snapshot();Project.Scene.Nodes.Remove(Selected);Nodes.Remove(Selected);Selected=null;}
  public void Save()=>ProjectStore.Save(Project);
  public void RefreshSensors(){Sensors.Clear();foreach(var s in provider.Snapshot().Where(s=>!s.Name.Contains("Thread",StringComparison.OrdinalIgnoreCase)).OrderBy(s=>s.Hardware).ThenBy(s=>s.Type).ThenBy(s=>s.Name))Sensors.Add(s);}
- public Dictionary<string,(float,string)> Values()=>Sensors.ToDictionary(s=>$"{s.Hardware} {s.Type} {s.Name}",s=>(s.Value,s.Unit),StringComparer.OrdinalIgnoreCase);
+ public Dictionary<string,(float Value,string Unit)> Values()=>Sensors.GroupBy(s=>$"{s.Hardware} {s.Type} {s.Name}",StringComparer.OrdinalIgnoreCase).ToDictionary(g=>g.Key,g=>(g.First().Value,g.First().Unit),StringComparer.OrdinalIgnoreCase);
  public event PropertyChangedEventHandler? PropertyChanged;void Changed([CallerMemberName]string? n=null)=>PropertyChanged?.Invoke(this,new(n));public void Dispose()=>provider.Dispose();
 }
 static class StackExt{public static void TrimBottom<T>(this Stack<T> s){var a=s.Reverse().Skip(1).ToArray();s.Clear();foreach(var x in a)s.Push(x);}}
