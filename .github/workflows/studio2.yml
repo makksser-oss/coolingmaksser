@@ -1,0 +1,19 @@
+name: Build Studio 2
+on:
+  workflow_dispatch:
+  push:
+    branches: [ studio2-rewrite ]
+    paths: [ 'Studio2/**', '.github/workflows/studio2.yml' ]
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with: { dotnet-version: '8.0.x' }
+      - name: Publish Studio 2
+        run: dotnet publish Studio2/Studio2.App/Studio2.App.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o Studio2/release
+      - uses: actions/upload-artifact@v4
+        with:
+          name: LOVINGCOOL-Studio-2-Windows-x64
+          path: Studio2/release/**
