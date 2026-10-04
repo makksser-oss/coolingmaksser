@@ -1,0 +1,3 @@
+namespace LovingCool.Studio2.Core;
+public sealed class Project { public int Schema{get;set;}=2; public string Name{get;set;}="My LCD"; public Scene Scene{get;set;}=new(); public DeviceSettings Device{get;set;}=new(); public List<string> Assets{get;set;}=[]; }
+public sealed class DeviceSettings { public int Rotation{get;set;}=90; public int Brightness{get;set;}=80; public int Fps{get;set;}=4; public bool AutoConnect{get;set;}=true; }
