@@ -1,0 +1,1 @@
+using System.Windows; namespace LovingCool.Studio2.App; public partial class App:Application { }
