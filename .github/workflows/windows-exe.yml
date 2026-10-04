@@ -15,22 +15,20 @@ jobs:
         shell: powershell
         run: |
           Add-Type -AssemblyName System.Drawing
-          $bmp = New-Object System.Drawing.Bitmap 256,256
-          $g=[System.Drawing.Graphics]::FromImage($bmp)
-          $g.SmoothingMode='AntiAlias'
-          $g.Clear([System.Drawing.Color]::FromArgb(7,10,24))
-          $rect=New-Object System.Drawing.Rectangle 18,18,220,220
-          $brush=New-Object System.Drawing.Drawing2D.LinearGradientBrush($rect,[System.Drawing.Color]::FromArgb(30,220,255),[System.Drawing.Color]::FromArgb(160,45,255),45)
-          $g.FillEllipse($brush,$rect)
-          $inner=New-Object System.Drawing.Rectangle 34,34,188,188
-          $g.FillEllipse((New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(12,15,38))),$inner)
-          $font=New-Object System.Drawing.Font 'Segoe UI',94,[System.Drawing.FontStyle]::Bold
-          $sf=New-Object System.Drawing.StringFormat
-          $sf.Alignment='Center';$sf.LineAlignment='Center'
-          $g.DrawString('L',$font,$brush,(New-Object System.Drawing.RectangleF 30,22,196,206),$sf)
-          $g.Dispose()
-          $ico=[System.Drawing.Icon]::FromHandle($bmp.GetHicon())
-          $fs=[System.IO.File]::Create('app.ico');$ico.Save($fs);$fs.Close();$bmp.Dispose()
+          $bmp=New-Object System.Drawing.Bitmap 256,256
+          $g=[System.Drawing.Graphics]::FromImage($bmp);$g.SmoothingMode='AntiAlias';$g.Clear([System.Drawing.Color]::FromArgb(7,10,24))
+          $r=New-Object System.Drawing.Rectangle 16,16,224,224
+          $grad=New-Object System.Drawing.Drawing2D.LinearGradientBrush($r,[System.Drawing.Color]::FromArgb(20,220,255),[System.Drawing.Color]::FromArgb(170,45,255),45)
+          $g.FillEllipse($grad,$r)
+          $g.FillEllipse((New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(11,15,36))),(New-Object System.Drawing.Rectangle 34,34,188,188))
+          $font=New-Object System.Drawing.Font('Segoe UI',92,[System.Drawing.FontStyle]::Bold)
+          $sf=New-Object System.Drawing.StringFormat;$sf.Alignment='Center';$sf.LineAlignment='Center'
+          $g.DrawString('L',$font,$grad,(New-Object System.Drawing.RectangleF 30,24,196,200),$sf);$g.Dispose()
+          $ms=New-Object System.IO.MemoryStream;$bmp.Save($ms,[System.Drawing.Imaging.ImageFormat]::Png);$png=$ms.ToArray();$ms.Dispose();$bmp.Dispose()
+          $fs=[System.IO.File]::Create('app.ico');$bw=New-Object System.IO.BinaryWriter($fs)
+          $bw.Write([UInt16]0);$bw.Write([UInt16]1);$bw.Write([UInt16]1)
+          $bw.Write([Byte]0);$bw.Write([Byte]0);$bw.Write([Byte]0);$bw.Write([Byte]0);$bw.Write([UInt16]1);$bw.Write([UInt16]32)
+          $bw.Write([UInt32]$png.Length);$bw.Write([UInt32]22);$bw.Write($png);$bw.Close()
       - name: Publish standalone EXE
         run: dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -p:ApplicationIcon=app.ico -o release
       - uses: actions/upload-artifact@v4
