@@ -11,9 +11,29 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
+      - name: Generate premium app icon
+        shell: powershell
+        run: |
+          Add-Type -AssemblyName System.Drawing
+          $bmp = New-Object System.Drawing.Bitmap 256,256
+          $g=[System.Drawing.Graphics]::FromImage($bmp)
+          $g.SmoothingMode='AntiAlias'
+          $g.Clear([System.Drawing.Color]::FromArgb(7,10,24))
+          $rect=New-Object System.Drawing.Rectangle 18,18,220,220
+          $brush=New-Object System.Drawing.Drawing2D.LinearGradientBrush($rect,[System.Drawing.Color]::FromArgb(30,220,255),[System.Drawing.Color]::FromArgb(160,45,255),45)
+          $g.FillEllipse($brush,$rect)
+          $inner=New-Object System.Drawing.Rectangle 34,34,188,188
+          $g.FillEllipse((New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(12,15,38))),$inner)
+          $font=New-Object System.Drawing.Font 'Segoe UI',94,[System.Drawing.FontStyle]::Bold
+          $sf=New-Object System.Drawing.StringFormat
+          $sf.Alignment='Center';$sf.LineAlignment='Center'
+          $g.DrawString('L',$font,$brush,(New-Object System.Drawing.RectangleF 30,22,196,206),$sf)
+          $g.Dispose()
+          $ico=[System.Drawing.Icon]::FromHandle($bmp.GetHicon())
+          $fs=[System.IO.File]::Create('app.ico');$ico.Save($fs);$fs.Close();$bmp.Dispose()
       - name: Publish standalone EXE
-        run: dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -o release
+        run: dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:DebugType=None -p:DebugSymbols=false -p:ApplicationIcon=app.ico -o release
       - uses: actions/upload-artifact@v4
         with:
-          name: LOVINGCOOL-Studio-Windows-x64
+          name: LOVINGCOOL-Studio-Premium-Windows-x64
           path: release/LOVINGCOOL Studio.exe
